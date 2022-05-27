@@ -1,9 +1,16 @@
 const { ApolloServer, gql } = require('apollo-server')
 
 const typeDefs = gql`
-      scalar Date
+    scalar Date
 
-       type Usuario {
+    type Produto {    
+        nome: String!
+        preco: Float
+        desconto: Float
+        precoComDesconto: Float
+      }
+
+    type Usuario {
         id: ID!
         nome: String!
         email: String!
@@ -13,14 +20,26 @@ const typeDefs = gql`
       }
 
       # Pontos de entrada da API
-      type Query {
+    type Query {
         ola: String
         horaAtual: Date
-        usuarioLogado: Usuario          
+        usuarioLogado: Usuario    
+        produtoEmDestaque: Produto  
+        numerosMegaSena: [Int!]!                    
       }
     `
 
 const resolvers = {
+
+  Produto: {
+    precoComDesconto(produto) {
+      if (produto.desconto) {
+        return produto.preco * (1 - produto.desconto)
+      } else {
+        return produto.preco
+      }
+    }
+  },
 
   Usuario: {
     salario(usuario) {
@@ -44,6 +63,19 @@ const resolvers = {
         salario_real: 100000.19,
         vip: true
       }
+    },
+    produtoEmDestaque() {
+      return {
+        nome: 'Notebook Gamer',
+        preco: 7000.99,
+        desconto: 0.15
+      }
+    },
+    numerosMegaSena() {
+      const crescente = (a, b) => a - b
+      return Array(6).fill(0)
+        .map(n => parseInt(Math.random() * 60 + 1))
+        .sort(crescente)
     }
   }
 }
