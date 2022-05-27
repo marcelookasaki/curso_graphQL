@@ -11,6 +11,7 @@ const typeDefs = gql`
         salario: Float
         vip: Boolean
       }
+
       # Pontos de entrada da API
       type Query {
         ola: String
@@ -20,6 +21,13 @@ const typeDefs = gql`
     `
 
 const resolvers = {
+
+  Usuario: {
+    salario(usuario) {
+      return usuario.salario_real
+    }
+  },
+
   Query: {
     ola() {
       return 'Bom dia!'
@@ -33,7 +41,7 @@ const resolvers = {
         nome: 'Marcelo',
         email: 'marcelo.okasaki@email.com',
         idade: 54,
-        salario: 100000.09,
+        salario_real: 100000.19,
         vip: true
       }
     }
